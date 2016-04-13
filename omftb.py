@@ -4,13 +4,28 @@
 
 import requests
 import click
+import random
 
 
 BOT_API_URL = 'https://api.telegram.org/bot'
+secret_number = 42
 
 
 def process_message(text):
-    return 'what is "' + text + '"?'
+    global secret_number
+    if text == '/start':
+        secret_number = random.randint(1, 100)
+        return 'Я загадал число от 1 до 100, попробуй угадать!'
+    try:
+        v = int(text)
+    except ValueError:
+        return 'Нужно ввести число'
+    if v > secret_number:
+        return 'Слишком много!'
+    if v < secret_number:
+        return 'Слишком мало!'
+    secret_number = random.randint(1, 100)
+    return 'Точно! Давай попробуем другое число.'
 
 
 def send_message(token, chat_id, text):
