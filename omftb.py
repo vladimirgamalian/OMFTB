@@ -3,11 +3,17 @@
 
 
 import requests
+import click
 
 
-def main():
-    r = requests.get('https://api.github.com/events')
-    print r.text
+BOT_API_URL = 'https://api.telegram.org/bot'
+
+
+@click.command()
+@click.argument('token')
+def main(token):
+    r = requests.post(BOT_API_URL + token + '/getUpdates', json={'timeout': 1})
+    print r.json()
 
 
 if __name__ == '__main__':
