@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 
 
+import requests
+
+
 def main():
-    print 'Hello, World!'
+    r = requests.get('https://api.github.com/events')
+    print r.text
 
 
 if __name__ == '__main__':
