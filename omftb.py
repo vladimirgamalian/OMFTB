@@ -8,23 +8,23 @@ import random
 
 
 BOT_API_URL = 'https://api.telegram.org/bot'
-secret_number = 42
+secret_number = {}
 
 
-def process_message(text):
+def process_message(chat_id, text):
     global secret_number
-    if text == '/start':
-        secret_number = random.randint(1, 100)
+    if (text == '/start') or (chat_id not in secret_number):
+        secret_number[chat_id] = random.randint(1, 100)
         return 'Я загадал число от 1 до 100, попробуй угадать!'
     try:
         v = int(text)
     except ValueError:
         return 'Нужно ввести число'
-    if v > secret_number:
+    if v > secret_number[chat_id]:
         return 'Слишком много!'
-    if v < secret_number:
+    if v < secret_number[chat_id]:
         return 'Слишком мало!'
-    secret_number = random.randint(1, 100)
+    secret_number[chat_id] = random.randint(1, 100)
     return 'Точно! Давай попробуем другое число.'
 
 
@@ -42,7 +42,7 @@ def process_updates(token, updates):
     text = message['text']
     chat = message['chat']
     chat_id = chat['id']
-    send_message(token, chat_id, process_message(text))
+    send_message(token, chat_id, process_message(chat_id, text))
 
 
 @click.command()
