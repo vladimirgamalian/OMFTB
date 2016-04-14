@@ -50,16 +50,14 @@ def process_updates(token, updates):
 def main(token):
     update_id = None
     while True:
-        req = {'timeout': 5, 'limit': 1}
+        req = {'timeout': 5}
         if update_id is not None:
             req['offset'] = update_id
         response = requests.post(BOT_API_URL + token + '/getUpdates', json=req).json()
         result_array = response['result']
-        if not result_array:
-            continue
-        result = result_array[0]
-        process_updates(token, result)
-        update_id = result['update_id'] + 1
+        for result in result_array:
+            process_updates(token, result)
+            update_id = result['update_id'] + 1
 
 
 if __name__ == '__main__':
